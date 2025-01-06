@@ -23,6 +23,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
+    // @Bean memberService -> new MemoryMemberRepository()
+    // @Bean orderService -> new MemoryMemberRepository()
+    // 이렇게 두번 호출해도 싱글톤 패턴이 깨지지 않는다.
+
     // 리팩토링 단축키: ctrl + alt + m
     // 생성자 주입 방식
     @Bean
@@ -30,8 +34,11 @@ public class AppConfig {
         return new MemberServiceImpl(memberRepository());
     }
 
+    // 해당 메서드에 static으로 되어있으면, Spring Container에서 싱글톤으로 유지 불가.
+    // static 키워드가 붙으면, Spring Container가 아닌 JVM이 관리하게 됨.
+    // static 키워드는 Spring Bean의 생명주기 관리에서 벗어나게 됨.
     @Bean
-    public static MemberRepository memberRepository() {
+    public MemberRepository memberRepository() {
         return new MemoryMemberRepository();
     }
 
